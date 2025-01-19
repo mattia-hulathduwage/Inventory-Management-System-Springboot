@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            margin-left: 80px;
+            margin-top: 60px;
+        }
+
+        nav ul li {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        nav ul li a:hover {
+            color: #ddd;
+        }
+
+        nav ul li a i {
+            margin-right: 10px;
+        }
+
+        /* Main Content Styles */
+        .content {
+            margin-left: 250px; /* Make room for the sidebar */
+            padding: 20px;
+        }
+
+        .category-management {
+            margin: 20px 0;
+        }
+
+        .category-management h1 {
+            text-align: left;
+        }
+
+        .divider {
+            border: 0;
+            height: 2px;
+            background: #000;
+            margin-top: -20px;
+            margin-bottom: 30px;
+            opacity: 0.1;
+        }
+
+        /* Buttons Wrapper */
+        .button-wrapper {
+            position: fixed;
+            top: 110px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1001;
+            margin-top: -60px;
+        }
+
+        .add-category-btn {
+            padding: 10px 20px;
+            background-color: black;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .add-category-btn:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+
+        .table-container {
+            max-height: 650px;
+            overflow-y: auto;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border: none;
+        }
+
+        th {
+            background-color: #f4f4f4;
+            font-size: 14px;
+        }
+
+        td {
+            background-color: white;
+            font-size: 12px;
+        }
+
+        .button-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-group button {
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px 25px;
+            border-radius: 10px;
+            width: 400px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .input-field {
+            margin: 10px 0;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: black;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <nav>
+        <ul>
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="category.html"><i class="fas fa-th-large"></i>Category</a></li>
+            <li><a href="inventory.html"><i class="fas fa-box"></i>Inventory</a></li>
+            <li><a href="stock.html"><i class="fas fa-cubes"></i>Stock</a></li>
+            <li><a href="sales.html"><i class="fas fa-shopping-cart"></i>Sales</a></li>
+            <li><a href="settings.html"><i class="fas fa-cogs"></i>Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Buttons Wrapper for Add Category -->
+    <div class="button-wrapper">
+        <button class="add-category-btn" onclick="openModal()">+ Add Category</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <div class="category-management">
+            <h1>Category Management</h1>
+
+            
+
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+                <table id="categoryTable">
+                    <thead>
+                        <tr>
+                            <th>Category ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Category data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Add Category -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Category</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <input type="text" id="categoryName" class="input-field" placeholder="Category Name" required>
+                <textarea id="categoryDescription" class="input-field" placeholder="Category Description" rows="4"
+                    required></textarea>
+                <button type="submit" class="submit-btn">Add Category</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Category -->
+    <div class="modal" id="editCategoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Category</h2>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editCategoryForm">
+                <input type="hidden" id="editCategoryId">
+                <input type="text" id="editCategoryName" class="input-field" placeholder="Category Name" required>
+                <textarea id="editCategoryDescription" class="input-field" placeholder="Category Description" rows="4" required></textarea>
+                <button type="submit" class="submit-btn">Update Category</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Open Modal
+        function openModal() {
+            document.getElementById("categoryModal").style.display = "flex";
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById("categoryModal").style.display = "none";
+        }
+
+        // Add Category Form Submission
+        document.getElementById("categoryForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const categoryName = document.getElementById("categoryName").value;
+            const categoryDescription = document.getElementById("categoryDescription").value;
+
+            fetch('http://localhost:8081/category', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: categoryName,
+                    description: categoryDescription
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Category added successfully');
+                    closeModal();
+                })
+                .catch(error => {
+                    console.error('Error adding category:', error);
+                });
+        });
+
+
+
+
+
+          // Handle delete action
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-icon")) {
+        const row = event.target.closest("tr");
+        const categoryId = event.target.getAttribute("data-product-id");
+
+        // Confirm deletion
+        if (confirm("Are you sure you want to delete this category?")) {
+            fetch(`http://localhost:8081/category/${categoryId}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        row.remove();  // Remove the row from the table
+                        alert('Category deleted successfully');
+                    } else {
+                        alert('Failed to delete the category');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting category:', error);
+                    alert('An error occurred while deleting the category');
+                });
+        }
+    }
+});
+
+
+
+   
+
+// Open Edit Modal and populate data
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("edit-icon")) {
+        const categoryId = event.target.getAttribute("data-product-id");
+
+        // Fetch category data by ID
+        fetch(`http://localhost:8081/category/${categoryId}`)
+            .then(response => response.json())
+            .then(category => {
+                // Populate the form fields with current category data
+                document.getElementById("editCategoryId").value = category.categoryId;
+                document.getElementById("editCategoryName").value = category.name;
+                document.getElementById("editCategoryDescription").value = category.description;
+
+                // Open the modal
+                document.getElementById("editCategoryModal").style.display = "flex";
+            })
+            .catch(error => {
+                console.error('Error fetching category data for editing:', error);
+            });
+    }
+});
+
+// Close Edit Modal
+function closeEditModal() {
+    document.getElementById("editCategoryModal").style.display = "none";
+}
+
+// Update Category Form Submission
+// Update Category Form Submission
+document.getElementById("editCategoryForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const categoryId = document.getElementById("editCategoryId").value;
+    const categoryName = document.getElementById("editCategoryName").value;
+    const categoryDescription = document.getElementById("editCategoryDescription").value;
+
+    // Send PUT request with category ID in URL
+    fetch(`http://localhost:8081/category/${categoryId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            categoryId: categoryId,
+            name: categoryName,
+            description: categoryDescription
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Category updated successfully');
+        closeEditModal();
+        location.reload();  // Reload the page to reflect changes
+    })
+    .catch(error => {
+        console.error('Error updating category:', error);
+        alert('Failed to update category');
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+        // Fetch category data
+        fetch('http://localhost:8081/category/all')
+            .then(response => response.json())
+            .then(categories => {
+                const table = document.getElementById("categoryTable").getElementsByTagName('tbody')[0];
+
+                // For each category, populate the table
+                categories.forEach(category => {
+                    const row = table.insertRow();
+
+                    // Insert cells into the row
+                    row.insertCell(0).textContent = `#C${String(category.categoryId).padStart(3, '0')}`; // Category ID
+                    row.insertCell(1).textContent = category.name;
+                    row.insertCell(2).textContent = category.description;
+                    row.insertCell(3).innerHTML = `
+    <div class="action-icons">
+        <i class="fas fa-edit edit-icon" data-product-id="${category.categoryId}"></i>
+        <i class="fas fa-trash delete-icon" data-product-id="${category.categoryId}"></i>
+    </div>`;
+
+            
+                });
+            })
+            .catch(error => console.error('Error fetching category data:', error));
+    </script>
+
+</body>
+
+</html>

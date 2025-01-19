@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #000000, #434343);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+}
+
+/* Login container styling */
+.login-container {
+    background: #fff;
+    color: #333;
+    width: 100%;
+    max-width: 480px; /* Increased width */
+    padding: 50px 40px; /* Increased padding for better spacing */
+    border-radius: 12px;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15); /* More prominent shadow */
+    text-align: center;
+    position: relative;
+}
+
+/* Header styling */
+.login-container h1 {
+    margin-bottom: 20px;
+    font-size: 30px; /* Larger font size */
+    font-weight: bold;
+    color: #333;
+}
+
+/* Paragraph styling */
+.login-container p {
+    font-size: 16px;
+    color: #777;
+    margin-bottom: 30px; /* Increased margin */
+}
+
+/* Input fields styling */
+input[type="email"], input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0; /* More spacing between inputs */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 18px; /* Larger font size */
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus state for input fields */
+input[type="email"]:focus, input[type="password"]:focus {
+    border-color: #000000;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Slight box-shadow on focus */
+}
+
+/* Button styling */
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 8px; /* Rounded corners */
+    font-size: 18px; /* Larger button text */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Hover state for button */
+button:hover {
+    background-color: #333;
+    transform: scale(1.05); /* Slight grow effect */
+}
+
+/* Error message styling */
+.error {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Forgot password link styling */
+.login-container .forgot-password {
+    text-align: left;
+    font-size: 14px;
+    color: #5a67d8;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+/* Hover state for forgot password link */
+.login-container .forgot-password:hover {
+    color: #4c51bf;
+}
+
+/* Register link styling */
+.login-container .register {
+    font-size: 14px;
+    margin-top: 20px;
+    color: #5a67d8;
+}
+
+.login-container .register a {
+    text-decoration: none;
+    color: #5a67d8;
+}
+
+/* Hover state for register link */
+.login-container .register a:hover {
+    color: #4c51bf;
+}
+
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Login</h1>
+        <p>Sign in to your account</p>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <div class="error" id="error"></div>
+        </form>
+        
+    </div>
+
+    <script>
+        // JavaScript for form submission
+        const loginForm = document.getElementById('loginForm');
+        const errorDiv = document.getElementById('error');
+    
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent the form from submitting normally
+    
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            try {
+                const response = await fetch('http://localhost:8080/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+    
+                if (response.ok) {
+                    const result = await response.text();
+                    alert(result); // Show the success message
+                    errorDiv.textContent = ''; // Clear any error message
+    
+                    // Redirect to inventory.html upon successful login
+                    window.location.href = 'dashboard.html';
+                } else {
+                    const errorMessage = await response.text();
+                    errorDiv.textContent = errorMessage; // Show the error message
+                    errorDiv.style.display = 'block'; // Make sure error is visible
+                }
+            } catch (error) {
+                errorDiv.textContent = 'An error occurred. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+    
+</body>
+</html>
